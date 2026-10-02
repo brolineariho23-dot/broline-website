@@ -1,0 +1,2889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Broline Cyber Target</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    min-height:100vh;
+    font-family:Arial,sans-serif;
+    color:white;
+    text-align:center;
+    overflow-x:hidden;
+
+    background:
+        linear-gradient(rgba(0,0,30,.86),rgba(0,0,10,.97)),
+        repeating-linear-gradient(
+            0deg,
+            transparent 0px,
+            transparent 39px,
+            rgba(0,255,255,.08) 40px
+        ),
+        repeating-linear-gradient(
+            90deg,
+            transparent 0px,
+            transparent 39px,
+            rgba(0,255,255,.08) 40px
+        ),
+        #02020d;
+}
+
+body.purple{
+    background:
+        linear-gradient(rgba(20,0,35,.9),rgba(8,0,20,.97)),
+        repeating-linear-gradient(
+            0deg,
+            transparent 0px,
+            transparent 39px,
+            rgba(180,0,255,.08) 40px
+        ),
+        repeating-linear-gradient(
+            90deg,
+            transparent 0px,
+            transparent 39px,
+            rgba(180,0,255,.08) 40px
+        ),
+        #08000f;
+}
+
+body.matrix{
+    background:
+        linear-gradient(rgba(0,25,5,.9),rgba(0,8,2,.97)),
+        repeating-linear-gradient(
+            0deg,
+            transparent 0px,
+            transparent 39px,
+            rgba(0,255,80,.08) 40px
+        ),
+        repeating-linear-gradient(
+            90deg,
+            transparent 0px,
+            transparent 39px,
+            rgba(0,255,80,.08) 40px
+        ),
+        #000b02;
+}
+
+.logo{
+    font-size:48px;
+    font-weight:bold;
+    letter-spacing:8px;
+    color:#00ffff;
+
+    text-shadow:
+        0 0 10px #00ffff,
+        0 0 25px #00ffff,
+        0 0 50px #0088ff;
+
+    margin-top:25px;
+
+    animation:logoPulse 2s infinite;
+}
+
+@keyframes logoPulse{
+
+    0%,100%{
+        text-shadow:
+            0 0 10px #00ffff,
+            0 0 25px #00ffff;
+    }
+
+    50%{
+        text-shadow:
+            0 0 10px #00ffff,
+            0 0 35px #00ffff,
+            0 0 60px #0088ff;
+    }
+
+}
+
+.subtitle{
+    color:#aaa;
+    margin:8px 0 20px;
+    letter-spacing:3px;
+}
+
+button{
+    border:2px solid #00ffff;
+    background:rgba(0,255,255,.08);
+    color:#00ffff;
+
+    padding:13px 25px;
+    margin:8px;
+
+    border-radius:8px;
+    cursor:pointer;
+
+    font-size:16px;
+    font-weight:bold;
+
+    transition:.2s;
+
+    box-shadow:
+        0 0 10px rgba(0,255,255,.25);
+}
+
+button:hover{
+    background:#00ffff;
+    color:#000;
+
+    box-shadow:
+        0 0 10px #00ffff,
+        0 0 25px #00ffff;
+
+    transform:scale(1.05);
+}
+
+.hidden{
+    display:none !important;
+}
+
+.panel{
+    width:90%;
+    max-width:650px;
+
+    margin:25px auto;
+    padding:30px;
+
+    border:1px solid #00ffff;
+    border-radius:15px;
+
+    background:rgba(0,0,30,.8);
+
+    box-shadow:
+        0 0 15px rgba(0,255,255,.25),
+        inset 0 0 20px rgba(0,255,255,.05);
+}
+
+.panel h2{
+    color:#00ffff;
+    margin-bottom:18px;
+}
+
+.panel p{
+    line-height:1.7;
+    color:#ddd;
+    margin:8px 0;
+}
+
+
+/* =========================
+   SETTINGS
+========================= */
+
+.settingRow{
+    margin:20px 0;
+    padding:20px;
+
+    border:1px solid rgba(0,255,255,.3);
+    border-radius:12px;
+}
+
+.settingTitle{
+    color:#00ffff;
+    font-size:20px;
+    margin-bottom:10px;
+}
+
+.settingStatus{
+    color:#00ffff;
+    font-size:18px;
+    font-weight:bold;
+    margin:10px;
+}
+
+
+/* =========================
+   GAME HUD
+========================= */
+
+#gameInfo{
+    width:94%;
+    max-width:900px;
+
+    margin:15px auto;
+
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+
+    gap:8px;
+}
+
+.infoBox{
+    min-width:100px;
+
+    border:1px solid #00ffff;
+
+    padding:10px 13px;
+
+    border-radius:8px;
+
+    background:rgba(0,255,255,.05);
+
+    color:#00ffff;
+
+    font-weight:bold;
+
+    box-shadow:
+        0 0 8px rgba(0,255,255,.15);
+}
+
+.infoBox span{
+    display:block;
+
+    margin-top:4px;
+
+    font-size:20px;
+
+    color:white;
+}
+
+
+/* =========================
+   GAME AREA
+========================= */
+
+#gameArea{
+    width:750px;
+    max-width:92%;
+
+    height:430px;
+
+    margin:15px auto;
+
+    position:relative;
+
+    overflow:hidden;
+
+    border:2px solid #00ffff;
+
+    border-radius:15px;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(0,255,255,.08),
+            transparent 60%
+        ),
+        rgba(0,0,20,.8);
+
+    box-shadow:
+        0 0 20px rgba(0,255,255,.3),
+        inset 0 0 30px rgba(0,255,255,.08);
+}
+
+
+/* GRID INSIDE GAME */
+
+#gameArea::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background:
+        linear-gradient(
+            rgba(0,255,255,.06) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(0,255,255,.06) 1px,
+            transparent 1px
+        );
+
+    background-size:35px 35px;
+
+    pointer-events:none;
+}
+
+
+/* =========================
+   TARGET
+========================= */
+
+#target{
+
+    width:55px;
+    height:55px;
+
+    border-radius:50%;
+
+    background:#00ffff;
+
+    position:absolute;
+
+    cursor:pointer;
+
+    z-index:4;
+
+    box-shadow:
+        0 0 10px #00ffff,
+        0 0 25px #00ffff,
+        0 0 45px #00ffff;
+
+    transition:
+        width .2s,
+        height .2s,
+        transform .1s;
+}
+
+#target:hover{
+    transform:scale(1.12);
+}
+
+#target::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:18px;
+    height:18px;
+
+    border-radius:50%;
+
+    background:white;
+
+    top:50%;
+    left:50%;
+
+    transform:translate(-50%,-50%);
+
+    box-shadow:0 0 10px white;
+}
+
+#target.bonus{
+
+    background:#ffd700;
+
+    box-shadow:
+        0 0 10px #ffd700,
+        0 0 25px #ffd700,
+        0 0 45px #ff9900;
+}
+
+
+/* =========================
+   POWER UP
+========================= */
+
+#powerUp{
+
+    position:absolute;
+
+    padding:10px 14px;
+
+    border-radius:10px;
+
+    font-size:25px;
+
+    cursor:pointer;
+
+    display:none;
+
+    z-index:6;
+
+    animation:powerPulse 1s infinite;
+}
+
+@keyframes powerPulse{
+
+    50%{
+        transform:scale(1.18);
+    }
+
+}
+
+
+/* =========================
+   COUNTDOWN
+========================= */
+
+#countdown{
+
+    position:absolute;
+
+    inset:0;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:90px;
+
+    font-weight:bold;
+
+    color:#00ffff;
+
+    text-shadow:
+        0 0 15px #00ffff,
+        0 0 40px #00ffff;
+
+    z-index:15;
+
+    pointer-events:none;
+
+    animation:countdownPulse .7s infinite;
+}
+
+@keyframes countdownPulse{
+
+    50%{
+        transform:scale(1.08);
+    }
+
+}
+
+
+/* =========================
+   START FLASH
+========================= */
+
+#startFlash{
+
+    position:absolute;
+
+    inset:0;
+
+    background:rgba(0,255,255,.15);
+
+    z-index:14;
+
+    pointer-events:none;
+
+    opacity:0;
+}
+
+#startFlash.active{
+
+    animation:startFlash .6s ease-out;
+}
+
+@keyframes startFlash{
+
+    0%{
+        opacity:1;
+    }
+
+    100%{
+        opacity:0;
+    }
+
+}
+
+
+/* =========================
+   COMBO
+========================= */
+
+#comboText{
+
+    position:absolute;
+
+    top:15px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    color:#ffff00;
+
+    font-size:27px;
+
+    font-weight:bold;
+
+    text-shadow:0 0 10px yellow;
+
+    z-index:10;
+
+    pointer-events:none;
+}
+
+
+/* =========================
+   SCORE POPUP
+========================= */
+
+.scorePopup{
+
+    position:absolute;
+
+    color:#00ffff;
+
+    font-size:25px;
+
+    font-weight:bold;
+
+    z-index:12;
+
+    pointer-events:none;
+
+    animation:scoreFloat .7s ease-out forwards;
+
+}
+
+@keyframes scoreFloat{
+
+    0%{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+    100%{
+        opacity:0;
+        transform:translateY(-50px);
+    }
+
+}
+
+
+/* =========================
+   MISS
+========================= */
+
+#missText{
+
+    position:absolute;
+
+    left:50%;
+    top:50%;
+
+    transform:translate(-50%,-50%);
+
+    color:#ff3355;
+
+    font-size:45px;
+
+    font-weight:bold;
+
+    text-shadow:0 0 20px red;
+
+    z-index:13;
+
+    pointer-events:none;
+}
+
+
+/* =========================
+   POWER TEXT
+========================= */
+
+#powerText{
+
+    position:absolute;
+
+    bottom:15px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    color:#ff00ff;
+
+    font-weight:bold;
+
+    font-size:18px;
+
+    text-shadow:0 0 10px #ff00ff;
+
+    z-index:10;
+
+    pointer-events:none;
+}
+
+
+/* =========================
+   PAUSE
+========================= */
+
+#pauseOverlay{
+
+    position:absolute;
+
+    inset:0;
+
+    background:rgba(0,0,15,.9);
+
+    z-index:30;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+}
+
+#pauseOverlay h2{
+
+    color:#00ffff;
+
+    font-size:45px;
+
+    text-shadow:0 0 20px #00ffff;
+
+    margin-bottom:15px;
+}
+
+
+/* =========================
+   LOADING
+========================= */
+
+#loadingScreen{
+
+    position:fixed;
+
+    inset:0;
+
+    background:#02020d;
+
+    z-index:100;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+}
+
+.loadingTitle{
+
+    font-size:35px;
+
+    color:#00ffff;
+
+    text-shadow:0 0 20px #00ffff;
+}
+
+.loadingBar{
+
+    width:300px;
+
+    max-width:80%;
+
+    height:15px;
+
+    border:1px solid #00ffff;
+
+    margin-top:20px;
+
+    border-radius:20px;
+
+    overflow:hidden;
+}
+
+.loadingProgress{
+
+    width:0%;
+
+    height:100%;
+
+    background:#00ffff;
+
+    box-shadow:0 0 15px #00ffff;
+}
+
+#loadingPercent{
+
+    margin-top:10px;
+
+    color:#00ffff;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer{
+
+    margin:30px;
+
+    color:#666;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:600px){
+
+    .logo{
+
+        font-size:32px;
+
+        letter-spacing:4px;
+    }
+
+    #gameArea{
+
+        height:350px;
+    }
+
+    .infoBox{
+
+        min-width:80px;
+
+        font-size:12px;
+
+        padding:8px;
+    }
+
+    .infoBox span{
+
+        font-size:17px;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     LOADING SCREEN
+========================= -->
+
+<div id="loadingScreen" class="hidden">
+
+    <div class="loadingTitle">
+        BROLINE
+    </div>
+
+    <div style="margin-top:8px;color:#888;">
+        Initializing Cyber Target...
+    </div>
+
+    <div class="loadingBar">
+
+        <div
+            class="loadingProgress"
+            id="loadingProgress">
+        </div>
+
+    </div>
+
+    <div id="loadingPercent">
+        0%
+    </div>
+
+</div>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<div class="logo">
+    BROLINE
+</div>
+
+<div class="subtitle">
+    CYBER TARGET // GAMING & ICT
+</div>
+
+
+<!-- =========================
+     MAIN MENU
+========================= -->
+
+<div id="mainMenu" class="panel">
+
+    <h2>
+        🎮 CYBER TARGET
+    </h2>
+
+    <p>
+        Welcome to the Broline Gaming Zone.
+    </p>
+
+    <button onclick="showDifficulty()">
+        ▶️ PLAY GAME
+    </button>
+
+    <button onclick="showPanel('howToPanel')">
+        📖 HOW TO PLAY
+    </button>
+
+    <button onclick="showHighScores()">
+        🏆 HIGH SCORES
+    </button>
+
+    <button onclick="showPanel('settingsPanel')">
+        ⚙️ SETTINGS
+    </button>
+
+</div>
+
+
+<!-- =========================
+     HOW TO PLAY
+========================= -->
+
+<div id="howToPanel" class="panel hidden">
+
+    <h2>
+        📖 HOW TO PLAY
+    </h2>
+
+    <p>
+        🎯 Click the moving target to score.
+    </p>
+
+    <p>
+        ⭐ Gold targets give 5 points.
+    </p>
+
+    <p>
+        🔥 Hit targets quickly to build combos.
+    </p>
+
+    <p>
+        ❤️ You have 3 lives.
+    </p>
+
+    <p>
+        ❌ Clicking empty space costs a life.
+    </p>
+
+    <p>
+        💎 Power-ups give special abilities.
+    </p>
+
+    <p>
+        🚀 Your level increases every 10 points.
+    </p>
+
+    <button onclick="backToMenu()">
+        🏠 BACK
+    </button>
+
+</div>
+
+
+<!-- =========================
+     HIGH SCORES
+========================= -->
+
+<div id="highScorePanel" class="panel hidden">
+
+    <h2>
+        🏆 HIGH SCORES
+    </h2>
+
+    <p>
+        Your Best Score:
+    </p>
+
+    <div
+        id="menuHighScore"
+        style="
+        font-size:45px;
+        color:#00ffff;
+        text-shadow:0 0 15px #00ffff;
+        margin:20px;">
+        0
+    </div>
+
+    <button onclick="resetHighScore()">
+        ♻️ RESET SCORE
+    </button>
+
+    <button onclick="backToMenu()">
+        🏠 BACK
+    </button>
+
+</div>
+
+
+<!-- =========================
+     SETTINGS
+========================= -->
+
+<div id="settingsPanel" class="panel hidden">
+
+    <h2>
+        ⚙️ SETTINGS
+    </h2>
+
+
+    <div class="settingRow">
+
+        <div class="settingTitle">
+            🔊 SOUND
+        </div>
+
+        <div
+            id="soundStatus"
+            class="settingStatus">
+            SOUND ON
+        </div>
+
+        <button onclick="setSound(true)">
+            🔊 ON
+        </button>
+
+        <button onclick="setSound(false)">
+            🔇 OFF
+        </button>
+
+    </div>
+
+
+    <div class="settingRow">
+
+        <div class="settingTitle">
+            🎨 THEME
+        </div>
+
+        <div
+            id="themeStatus"
+            class="settingStatus">
+            CYBER
+        </div>
+
+        <button onclick="setTheme('cyber')">
+            💠 CYBER
+        </button>
+
+        <button onclick="setTheme('purple')">
+            🟣 PURPLE
+        </button>
+
+        <button onclick="setTheme('matrix')">
+            🟢 MATRIX
+        </button>
+
+    </div>
+
+
+    <div class="settingRow">
+
+        <div class="settingTitle">
+            🎯 TARGET SIZE
+        </div>
+
+        <div
+            id="targetSizeStatus"
+            class="settingStatus">
+            MEDIUM
+        </div>
+
+        <button onclick="setTargetSize('small')">
+            SMALL
+        </button>
+
+        <button onclick="setTargetSize('medium')">
+            MEDIUM
+        </button>
+
+        <button onclick="setTargetSize('large')">
+            LARGE
+        </button>
+
+    </div>
+
+
+    <div class="settingRow">
+
+        <div class="settingTitle">
+            ⚡ GAME SPEED
+        </div>
+
+        <div
+            id="gameSpeedStatus"
+            class="settingStatus">
+            NORMAL
+        </div>
+
+        <button onclick="setGameSpeed('slow')">
+            🐢 SLOW
+        </button>
+
+        <button onclick="setGameSpeed('normal')">
+            ⚡ NORMAL
+        </button>
+
+        <button onclick="setGameSpeed('fast')">
+            🚀 FAST
+        </button>
+
+    </div>
+
+
+    <button onclick="backToMenu()">
+        🏠 BACK TO MENU
+    </button>
+
+</div>
+
+
+<!-- =========================
+     DIFFICULTY
+========================= -->
+
+<div id="difficultyScreen" class="panel hidden">
+
+    <h2>
+        ⚡ SELECT DIFFICULTY
+    </h2>
+
+    <button onclick="startGame('easy')">
+        🟢 EASY
+    </button>
+
+    <button onclick="startGame('normal')">
+        🟡 NORMAL
+    </button>
+
+    <button onclick="startGame('hard')">
+        🔴 HARD
+    </button>
+
+    <br>
+
+    <button onclick="backToMenu()">
+        🏠 BACK
+    </button>
+
+</div>
+
+
+<!-- =========================
+     GAME HUD
+========================= -->
+
+<div id="gameInfo" class="hidden">
+
+    <div class="infoBox">
+        SCORE
+        <span id="score">0</span>
+    </div>
+
+    <div class="infoBox">
+        TIME
+        <span id="time">30</span>
+    </div>
+
+    <div class="infoBox">
+        LEVEL
+        <span id="level">1</span>
+    </div>
+
+    <div class="infoBox">
+        🏆 BEST
+        <span id="highScore">0</span>
+    </div>
+
+    <div class="infoBox">
+        MODE
+        <span id="mode">NORMAL</span>
+    </div>
+
+    <div class="infoBox">
+        🔥 COMBO
+        <span id="combo">0</span>
+    </div>
+
+    <div class="infoBox">
+        ❤️ LIVES
+        <span id="lives">3</span>
+    </div>
+
+</div>
+
+
+<!-- =========================
+     GAME AREA
+========================= -->
+
+<div id="gameArea" class="hidden">
+
+    <div id="startFlash"></div>
+
+    <div id="countdown"></div>
+
+    <div id="comboText"></div>
+
+    <div id="missText"></div>
+
+    <div id="powerText"></div>
+
+    <div id="powerUp"></div>
+
+
+    <div id="pauseOverlay" class="hidden">
+
+        <h2>
+            ⏸️ PAUSED
+        </h2>
+
+        <button onclick="resumeGame()">
+            ▶️ RESUME
+        </button>
+
+        <button onclick="quitGame()">
+            🏠 MENU
+        </button>
+
+    </div>
+
+
+    <div id="target"></div>
+
+</div>
+
+
+<button
+    id="pauseButton"
+    class="hidden"
+    onclick="pauseGame()">
+
+    ⏸️ PAUSE
+
+</button>
+
+
+<!-- =========================
+     GAME OVER
+========================= -->
+
+<div id="gameOverPanel" class="panel hidden">
+
+    <h2>
+        💥 GAME OVER
+    </h2>
+
+    <p>
+        YOUR SCORE
+    </p>
+
+    <div
+        id="finalScore"
+        style="
+        font-size:50px;
+        color:#00ffff;
+        text-shadow:0 0 20px #00ffff;
+        margin:15px;">
+        0
+    </div>
+
+    <p>
+        🏆 HIGH SCORE:
+        <span id="finalHighScore">0</span>
+    </p>
+
+    <p>
+        🔥 BEST COMBO:
+        <span id="finalCombo">0</span>
+    </p>
+
+    <p>
+        ❤️ LIVES:
+        <span id="finalLives">0</span>
+    </p>
+
+    <button onclick="showDifficulty()">
+        🔄 PLAY AGAIN
+    </button>
+
+    <button onclick="backToMenu()">
+        🏠 MAIN MENU
+    </button>
+
+</div>
+
+
+<div class="footer">
+    © 2026 Broline Gaming & ICT
+</div>
+
+
+<script>
+
+/* =========================
+   VARIABLES
+========================= */
+
+let score = 0;
+let time = 30;
+let level = 1;
+
+let combo = 0;
+let bestCombo = 0;
+
+let lives = 3;
+
+let lastHitTime = 0;
+
+let timer;
+let movement;
+
+let difficulty = "normal";
+
+let paused = false;
+let countdownActive = false;
+
+let doublePoints = false;
+let speedBoost = false;
+
+let powerUpActive = false;
+
+let powerUpTimer;
+let powerSpawnTimer;
+
+
+/* =========================
+   SAVED SETTINGS
+========================= */
+
+let soundEnabled =
+    localStorage.getItem("brolineSound") !== "false";
+
+let currentTheme =
+    localStorage.getItem("brolineTheme") || "cyber";
+
+let targetSize =
+    localStorage.getItem("brolineTargetSize") || "medium";
+
+let gameSpeed =
+    localStorage.getItem("brolineGameSpeed") || "normal";
+
+let highScore =
+    localStorage.getItem("brolineHighScore") || 0;
+
+
+/* =========================
+   ELEMENTS
+========================= */
+
+const target =
+    document.getElementById("target");
+
+const gameArea =
+    document.getElementById("gameArea");
+
+const powerUp =
+    document.getElementById("powerUp");
+
+
+/* =========================
+   MENU
+========================= */
+
+function hideEverything(){
+
+    document.querySelectorAll(".panel")
+        .forEach(function(panel){
+
+            panel.classList.add("hidden");
+
+        });
+
+    document.getElementById("gameInfo")
+        .classList.add("hidden");
+
+    document.getElementById("gameArea")
+        .classList.add("hidden");
+
+    document.getElementById("pauseButton")
+        .classList.add("hidden");
+
+}
+
+
+function showPanel(id){
+
+    hideEverything();
+
+    document.getElementById(id)
+        .classList.remove("hidden");
+
+}
+
+
+function backToMenu(){
+
+    clearInterval(timer);
+    clearInterval(movement);
+
+    clearTimeout(powerUpTimer);
+    clearTimeout(powerSpawnTimer);
+
+    hideEverything();
+
+    document.getElementById("mainMenu")
+        .classList.remove("hidden");
+
+    target.style.display = "block";
+
+    powerUp.style.display = "none";
+
+    paused = false;
+
+}
+
+
+function showDifficulty(){
+
+    hideEverything();
+
+    document.getElementById(
+        "difficultyScreen"
+    ).classList.remove("hidden");
+
+}
+
+
+function showHighScores(){
+
+    hideEverything();
+
+    document.getElementById(
+        "menuHighScore"
+    ).textContent = highScore;
+
+    document.getElementById(
+        "highScorePanel"
+    ).classList.remove("hidden");
+
+}
+
+
+function resetHighScore(){
+
+    localStorage.setItem(
+        "brolineHighScore",
+        0
+    );
+
+    highScore = 0;
+
+    document.getElementById(
+        "menuHighScore"
+    ).textContent = 0;
+
+}
+
+
+/* =========================
+   SOUND
+========================= */
+
+function playSound(frequency,duration){
+
+    if(!soundEnabled)
+        return;
+
+    try{
+
+        const AudioContext =
+            window.AudioContext ||
+            window.webkitAudioContext;
+
+        const audio =
+            new AudioContext();
+
+        const oscillator =
+            audio.createOscillator();
+
+        const gain =
+            audio.createGain();
+
+        oscillator.type =
+            "square";
+
+        oscillator.frequency.value =
+            frequency;
+
+        gain.gain.setValueAtTime(
+            .08,
+            audio.currentTime
+        );
+
+        gain.gain.exponentialRampToValueAtTime(
+            .001,
+            audio.currentTime + duration
+        );
+
+        oscillator.connect(gain);
+
+        gain.connect(
+            audio.destination
+        );
+
+        oscillator.start();
+
+        oscillator.stop(
+            audio.currentTime + duration
+        );
+
+    }catch(error){
+
+        console.log("Sound unavailable");
+
+    }
+
+}
+
+
+function setSound(value){
+
+    soundEnabled = value;
+
+    localStorage.setItem(
+        "brolineSound",
+        value
+    );
+
+    updateSettings();
+
+    if(value){
+
+        playSound(800,.12);
+
+    }
+
+}
+
+
+/* =========================
+   THEME
+========================= */
+
+function setTheme(theme){
+
+    currentTheme = theme;
+
+    localStorage.setItem(
+        "brolineTheme",
+        theme
+    );
+
+    document.body.classList.remove(
+        "purple",
+        "matrix"
+    );
+
+    if(theme === "purple"){
+
+        document.body.classList.add(
+            "purple"
+        );
+
+    }
+
+    if(theme === "matrix"){
+
+        document.body.classList.add(
+            "matrix"
+        );
+
+    }
+
+    updateSettings();
+
+}
+
+
+/* =========================
+   TARGET SIZE
+========================= */
+
+function setTargetSize(size){
+
+    targetSize = size;
+
+    localStorage.setItem(
+        "brolineTargetSize",
+        size
+    );
+
+    applyTargetSize();
+
+    updateSettings();
+
+}
+
+
+function applyTargetSize(){
+
+    let size = 55;
+
+    if(targetSize === "small")
+        size = 35;
+
+    if(targetSize === "large")
+        size = 75;
+
+    target.style.width =
+        size + "px";
+
+    target.style.height =
+        size + "px";
+
+}
+
+
+/* =========================
+   GAME SPEED
+========================= */
+
+function setGameSpeed(speed){
+
+    gameSpeed = speed;
+
+    localStorage.setItem(
+        "brolineGameSpeed",
+        speed
+    );
+
+    updateSettings();
+
+    if(
+        !gameArea.classList.contains(
+            "hidden"
+        )
+    ){
+
+        startMovement();
+
+    }
+
+}
+
+
+/* =========================
+   SETTINGS DISPLAY
+========================= */
+
+function updateSettings(){
+
+    document.getElementById(
+        "soundStatus"
+    ).textContent =
+        soundEnabled
+        ? "🔊 SOUND ON"
+        : "🔇 SOUND OFF";
+
+
+    document.getElementById(
+        "themeStatus"
+    ).textContent =
+        currentTheme.toUpperCase();
+
+
+    document.getElementById(
+        "targetSizeStatus"
+    ).textContent =
+        targetSize.toUpperCase();
+
+
+    document.getElementById(
+        "gameSpeedStatus"
+    ).textContent =
+        gameSpeed.toUpperCase();
+
+}
+
+
+/* =========================
+   START GAME
+========================= */
+
+function startGame(selectedDifficulty){
+
+    difficulty =
+        selectedDifficulty;
+
+    score = 0;
+
+    level = 1;
+
+    combo = 0;
+
+    bestCombo = 0;
+
+    lives = 3;
+
+    paused = false;
+
+    countdownActive = true;
+
+    doublePoints = false;
+
+    speedBoost = false;
+
+
+    if(difficulty === "easy"){
+
+        time = 45;
+
+    }else if(difficulty === "hard"){
+
+        time = 20;
+
+    }else{
+
+        time = 30;
+
+    }
+
+
+    document.getElementById(
+        "score"
+    ).textContent = score;
+
+    document.getElementById(
+        "time"
+    ).textContent = time;
+
+    document.getElementById(
+        "level"
+    ).textContent = level;
+
+    document.getElementById(
+        "combo"
+    ).textContent = combo;
+
+    document.getElementById(
+        "lives"
+    ).textContent = lives;
+
+    document.getElementById(
+        "mode"
+    ).textContent =
+        difficulty.toUpperCase();
+
+    document.getElementById(
+        "highScore"
+    ).textContent = highScore;
+
+
+    hideEverything();
+
+
+    document.getElementById(
+        "gameInfo"
+    ).classList.remove("hidden");
+
+    document.getElementById(
+        "gameArea"
+    ).classList.remove("hidden");
+
+    document.getElementById(
+        "pauseButton"
+    ).classList.remove("hidden");
+
+
+    applyTargetSize();
+
+    target.style.display =
+        "block";
+
+
+    moveTarget();
+
+    startLoading();
+
+}
+
+
+/* =========================
+   LOADING
+========================= */
+
+function startLoading(){
+
+    const screen =
+        document.getElementById(
+            "loadingScreen"
+        );
+
+    const progress =
+        document.getElementById(
+            "loadingProgress"
+        );
+
+    const percent =
+        document.getElementById(
+            "loadingPercent"
+        );
+
+
+    screen.classList.remove(
+        "hidden"
+    );
+
+
+    let value = 0;
+
+
+    const loading =
+        setInterval(function(){
+
+            value += 5;
+
+            progress.style.width =
+                value + "%";
+
+            percent.textContent =
+                value + "%";
+
+
+            if(value >= 100){
+
+                clearInterval(
+                    loading
+                );
+
+
+                setTimeout(function(){
+
+                    screen.classList.add(
+                        "hidden"
+                    );
+
+                    startCountdown();
+
+                },300);
+
+            }
+
+        },50);
+
+}
+
+
+/* =========================
+   START COUNTDOWN
+========================= */
+
+function startCountdown(){
+
+    countdownActive = true;
+
+    const countdown =
+        document.getElementById(
+            "countdown"
+        );
+
+
+    let number = 3;
+
+    countdown.textContent =
+        number;
+
+
+    playSound(
+        400,
+        .15
+    );
+
+
+    const interval =
+        setInterval(function(){
+
+            number--;
+
+
+            if(number > 0){
+
+                countdown.textContent =
+                    number;
+
+                playSound(
+                    500,
+                    .15
+                );
+
+            }else{
+
+                countdown.textContent =
+                    "GO!";
+
+
+                playSound(
+                    900,
+                    .2
+                );
+
+
+                document.getElementById(
+                    "startFlash"
+                ).classList.add(
+                    "active"
+                );
+
+
+                setTimeout(function(){
+
+                    document.getElementById(
+                        "startFlash"
+                    ).classList.remove(
+                        "active"
+                    );
+
+                    countdown.textContent =
+                        "";
+
+                    countdownActive =
+                        false;
+
+                    startMovement();
+
+                    startTimer();
+
+                    startPowerUps();
+
+                },600);
+
+
+                clearInterval(
+                    interval
+                );
+
+            }
+
+        },800);
+
+}
+
+
+/* =========================
+   TIMER
+========================= */
+
+function startTimer(){
+
+    clearInterval(timer);
+
+    timer =
+        setInterval(function(){
+
+            if(
+                paused ||
+                countdownActive
+            )
+                return;
+
+
+            time--;
+
+            document.getElementById(
+                "time"
+            ).textContent =
+                time;
+
+
+            if(
+                lastHitTime > 0 &&
+                Date.now() -
+                lastHitTime > 2000
+            ){
+
+                combo = 0;
+
+                document.getElementById(
+                    "combo"
+                ).textContent =
+                    combo;
+
+            }
+
+
+            if(time <= 0){
+
+                endGame();
+
+            }
+
+        },1000);
+
+}
+
+
+/* =========================
+   MOVEMENT
+========================= */
+
+function startMovement(){
+
+    clearInterval(movement);
+
+
+    let speed;
+
+
+    if(difficulty === "easy"){
+
+        speed =
+            1200 -
+            ((level - 1) * 80);
+
+    }else if(difficulty === "hard"){
+
+        speed =
+            650 -
+            ((level - 1) * 50);
+
+    }else{
+
+        speed =
+            900 -
+            ((level - 1) * 80);
+
+    }
+
+
+    if(gameSpeed === "slow"){
+
+        speed *= 1.5;
+
+    }
+
+
+    if(gameSpeed === "fast"){
+
+        speed *= .65;
+
+    }
+
+
+    if(speedBoost){
+
+        speed /= 2;
+
+    }
+
+
+    speed =
+        Math.max(
+            150,
+            speed
+        );
+
+
+    movement =
+        setInterval(
+            moveTarget,
+            speed
+        );
+
+}
+
+
+function moveTarget(){
+
+    if(
+        paused ||
+        countdownActive
+    )
+        return;
+
+
+    const maxX =
+        gameArea.clientWidth -
+        target.offsetWidth;
+
+    const maxY =
+        gameArea.clientHeight -
+        target.offsetHeight;
+
+
+    const x =
+        Math.random() * maxX;
+
+    const y =
+        Math.random() * maxY;
+
+
+    target.style.left =
+        x + "px";
+
+    target.style.top =
+        y + "px";
+
+
+    if(Math.random() < .20){
+
+        target.classList.add(
+            "bonus"
+        );
+
+    }else{
+
+        target.classList.remove(
+            "bonus"
+        );
+
+    }
+
+}
+
+
+/* =========================
+   SCORE POPUP
+========================= */
+
+function showScorePopup(points){
+
+    const popup =
+        document.createElement(
+            "div"
+        );
+
+    popup.className =
+        "scorePopup";
+
+    popup.textContent =
+        "+" + points;
+
+
+    const x =
+        target.offsetLeft;
+
+    const y =
+        target.offsetTop;
+
+
+    popup.style.left =
+        x + "px";
+
+    popup.style.top =
+        y + "px";
+
+
+    gameArea.appendChild(
+        popup
+    );
+
+
+    setTimeout(function(){
+
+        popup.remove();
+
+    },700);
+
+}
+
+
+/* =========================
+   TARGET CLICK
+========================= */
+
+target.addEventListener(
+    "click",
+    function(event){
+
+        event.stopPropagation();
+
+
+        if(
+            paused ||
+            countdownActive ||
+            lives <= 0
+        )
+            return;
+
+
+        const now =
+            Date.now();
+
+
+        if(
+            lastHitTime > 0 &&
+            now -
+            lastHitTime <= 2000
+        ){
+
+            combo++;
+
+        }else{
+
+            combo = 1;
+
+        }
+
+
+        lastHitTime =
+            now;
+
+
+        if(combo > bestCombo){
+
+            bestCombo =
+                combo;
+
+        }
+
+
+        let points =
+            target.classList.contains(
+                "bonus"
+            )
+            ? 5
+            : 1;
+
+
+        if(doublePoints){
+
+            points *= 2;
+
+        }
+
+
+        if(combo >= 5){
+
+            points +=
+                Math.floor(
+                    combo / 5
+                );
+
+        }
+
+
+        score +=
+            points;
+
+
+        document.getElementById(
+            "score"
+        ).textContent =
+            score;
+
+        document.getElementById(
+            "combo"
+        ).textContent =
+            combo;
+
+
+        showScorePopup(
+            points
+        );
+
+
+        playSound(
+            target.classList.contains(
+                "bonus"
+            )
+            ? 1000
+            : 700,
+            .1
+        );
+
+
+        if(combo >= 3){
+
+            const comboText =
+                document.getElementById(
+                    "comboText"
+                );
+
+
+            comboText.textContent =
+                "🔥 " +
+                combo +
+                " COMBO!";
+
+
+            setTimeout(function(){
+
+                comboText.textContent =
+                    "";
+
+            },700);
+
+        }
+
+
+        if(score % 10 === 0){
+
+            level++;
+
+
+            document.getElementById(
+                "level"
+            ).textContent =
+                level;
+
+
+            playSound(
+                1200,
+                .15
+            );
+
+
+            startMovement();
+
+        }
+
+
+        moveTarget();
+
+    }
+);
+
+
+/* =========================
+   MISS
+========================= */
+
+gameArea.addEventListener(
+    "click",
+    function(event){
+
+        if(
+            event.target === target ||
+            event.target === powerUp ||
+            paused ||
+            countdownActive
+        )
+            return;
+
+
+        missTarget();
+
+    }
+);
+
+
+function missTarget(){
+
+    if(lives <= 0)
+        return;
+
+
+    lives--;
+
+
+    document.getElementById(
+        "lives"
+    ).textContent =
+        lives;
+
+
+    combo = 0;
+
+
+    document.getElementById(
+        "combo"
+    ).textContent =
+        combo;
+
+
+    lastHitTime = 0;
+
+
+    const miss =
+        document.getElementById(
+            "missText"
+        );
+
+
+    miss.textContent =
+        "MISS!";
+
+
+    playSound(
+        180,
+        .15
+    );
+
+
+    setTimeout(function(){
+
+        miss.textContent =
+            "";
+
+    },500);
+
+
+    if(lives <= 0){
+
+        endGame();
+
+    }
+
+}
+
+
+/* =========================
+   POWER UPS
+========================= */
+
+function startPowerUps(){
+
+    clearTimeout(
+        powerSpawnTimer
+    );
+
+    schedulePowerUp();
+
+}
+
+
+function schedulePowerUp(){
+
+    const delay =
+        5000 +
+        Math.random() * 5000;
+
+
+    powerSpawnTimer =
+        setTimeout(function(){
+
+            spawnPowerUp();
+
+        },delay);
+
+}
+
+
+function spawnPowerUp(){
+
+    if(
+        paused ||
+        countdownActive
+    ){
+
+        schedulePowerUp();
+
+        return;
+
+    }
+
+
+    const types =
+        [
+            "double",
+            "speed",
+            "life"
+        ];
+
+
+    const type =
+        types[
+            Math.floor(
+                Math.random() *
+                types.length
+            )
+        ];
+
+
+    if(type === "double"){
+
+        powerUp.textContent =
+            "💎";
+
+    }
+
+    if(type === "speed"){
+
+        powerUp.textContent =
+            "⚡";
+
+    }
+
+    if(type === "life"){
+
+        powerUp.textContent =
+            "❤️";
+
+    }
+
+
+    const maxX =
+        gameArea.clientWidth -
+        60;
+
+    const maxY =
+        gameArea.clientHeight -
+        60;
+
+
+    powerUp.style.left =
+        Math.random() *
+        maxX +
+        "px";
+
+    powerUp.style.top =
+        Math.random() *
+        maxY +
+        "px";
+
+
+    powerUp.style.display =
+        "block";
+
+
+    powerUpActive =
+        true;
+
+
+    clearTimeout(
+        powerUpTimer
+    );
+
+
+    powerUpTimer =
+        setTimeout(function(){
+
+            powerUp.style.display =
+                "none";
+
+            powerUpActive =
+                false;
+
+            schedulePowerUp();
+
+        },5000);
+
+}
+
+
+powerUp.addEventListener(
+    "click",
+    function(event){
+
+        event.stopPropagation();
+
+
+        if(
+            !powerUpActive ||
+            paused ||
+            countdownActive
+        )
+            return;
+
+
+        const type =
+            powerUp.textContent;
+
+
+        powerUp.style.display =
+            "none";
+
+
+        powerUpActive =
+            false;
+
+
+        clearTimeout(
+            powerUpTimer
+        );
+
+
+        if(type === "💎"){
+
+            activateDouble();
+
+        }
+
+
+        if(type === "⚡"){
+
+            activateSpeed();
+
+        }
+
+
+        if(type === "❤️"){
+
+            activateLife();
+
+        }
+
+
+        schedulePowerUp();
+
+    }
+);
+
+
+function showPowerMessage(message){
+
+    const text =
+        document.getElementById(
+            "powerText"
+        );
+
+
+    text.textContent =
+        message;
+
+
+    setTimeout(function(){
+
+        text.textContent =
+            "";
+
+    },1500);
+
+}
+
+
+function activateDouble(){
+
+    doublePoints =
+        true;
+
+
+    showPowerMessage(
+        "💎 DOUBLE POINTS!"
+    );
+
+
+    playSound(
+        1000,
+        .15
+    );
+
+
+    clearTimeout(
+        powerUpTimer
+    );
+
+
+    powerUpTimer =
+        setTimeout(function(){
+
+            doublePoints =
+                false;
+
+            showPowerMessage(
+                "💎 BONUS ENDED"
+            );
+
+        },8000);
+
+}
+
+
+function activateSpeed(){
+
+    speedBoost =
+        true;
+
+
+    showPowerMessage(
+        "⚡ SPEED BOOST!"
+    );
+
+
+    playSound(
+        1200,
+        .15
+    );
+
+
+    startMovement();
+
+
+    clearTimeout(
+        powerUpTimer
+    );
+
+
+    powerUpTimer =
+        setTimeout(function(){
+
+            speedBoost =
+                false;
+
+            showPowerMessage(
+                "⚡ SPEED NORMAL"
+            );
+
+            startMovement();
+
+        },6000);
+
+}
+
+
+function activateLife(){
+
+    if(lives < 3){
+
+        lives++;
+
+        document.getElementById(
+            "lives"
+        ).textContent =
+            lives;
+
+        showPowerMessage(
+            "❤️ EXTRA LIFE!"
+        );
+
+    }else{
+
+        score += 3;
+
+        document.getElementById(
+            "score"
+        ).textContent =
+            score;
+
+        showPowerMessage(
+            "❤️ +3 SCORE!"
+        );
+
+    }
+
+
+    playSound(
+        850,
+        .15
+    );
+
+}
+
+
+/* =========================
+   PAUSE
+========================= */
+
+function pauseGame(){
+
+    if(
+        countdownActive ||
+        paused
+    )
+        return;
+
+
+    paused =
+        true;
+
+
+    clearInterval(timer);
+
+    clearInterval(movement);
+
+
+    document.getElementById(
+        "pauseOverlay"
+    ).classList.remove(
+        "hidden"
+    );
+
+
+    playSound(
+        300,
+        .1
+    );
+
+}
+
+
+function resumeGame(){
+
+    paused =
+        false;
+
+
+    document.getElementById(
+        "pauseOverlay"
+    ).classList.add(
+        "hidden"
+    );
+
+
+    startTimer();
+
+    startMovement();
+
+
+    playSound(
+        600,
+        .1
+    );
+
+}
+
+
+function quitGame(){
+
+    backToMenu();
+
+}
+
+
+/* =========================
+   GAME OVER
+========================= */
+
+function endGame(){
+
+    clearInterval(timer);
+
+    clearInterval(movement);
+
+    clearTimeout(powerUpTimer);
+
+    clearTimeout(powerSpawnTimer);
+
+
+    target.style.display =
+        "none";
+
+    powerUp.style.display =
+        "none";
+
+
+    if(score > highScore){
+
+        highScore =
+            score;
+
+
+        localStorage.setItem(
+            "brolineHighScore",
+            highScore
+        );
+
+
+        playSound(
+            1400,
+            .3
+        );
+
+    }else{
+
+        playSound(
+            200,
+            .3
+        );
+
+    }
+
+
+    document.getElementById(
+        "finalScore"
+    ).textContent =
+        score;
+
+
+    document.getElementById(
+        "finalHighScore"
+    ).textContent =
+        highScore;
+
+
+    document.getElementById(
+        "finalCombo"
+    ).textContent =
+        bestCombo;
+
+
+    document.getElementById(
+        "finalLives"
+    ).textContent =
+        lives;
+
+
+    document.getElementById(
+        "gameInfo"
+    ).classList.add(
+        "hidden"
+    );
+
+
+    document.getElementById(
+        "gameArea"
+    ).classList.add(
+        "hidden"
+    );
+
+
+    document.getElementById(
+        "pauseButton"
+    ).classList.add(
+        "hidden"
+    );
+
+
+    document.getElementById(
+        "gameOverPanel"
+    ).classList.remove(
+        "hidden"
+    );
+
+}
+
+
+/* =========================
+   LOAD SETTINGS
+========================= */
+
+function loadSettings(){
+
+    document.body.classList.remove(
+        "purple",
+        "matrix"
+    );
+
+
+    if(currentTheme === "purple"){
+
+        document.body.classList.add(
+            "purple"
+        );
+
+    }
+
+
+    if(currentTheme === "matrix"){
+
+        document.body.classList.add(
+            "matrix"
+        );
+
+    }
+
+
+    applyTargetSize();
+
+    updateSettings();
+
+}
+
+
+loadSettings();
+
+
+document.getElementById(
+    "highScore"
+).textContent =
+    highScore;
+
+</script>
+
+</body>
+</html>
